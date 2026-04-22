@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ships-db
+spec:
+  serviceName: "ships-db"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ships-db
+  template:
+    metadata:
+      labels:
+        app: ships-db
+    spec:
+      containers:
+        - name: ships-db
+          image: postgres:16
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: ships-pgsecret
+                  key: POSTGRES_DB
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: ships-pgsecret
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ships-pgsecret
+                  key: POSTGRES_PASSWORD
+          volumeMounts:
+            - name: ships-storage
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: ships-storage
+          persistentVolumeClaim:
+            claimName: ships-pvc
