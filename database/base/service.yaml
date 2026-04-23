@@ -4,6 +4,7 @@ metadata:
   name: ships-db
 spec:
   ports:
-    - port: 5432
+    - port: 4999
+      targetPort: 5432
   selector:
     app: ships-db
