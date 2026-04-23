@@ -5,7 +5,7 @@ RUN mkdir -p /app/workdir
 WORKDIR /app/workdir
 
 # Copy requirements
-COPY requirements.txt /app/workdir/.
+COPY build/requirements.txt /app/workdir/.
 COPY run.py /app/workdir/.
 COPY app /app/workdir/app
 
