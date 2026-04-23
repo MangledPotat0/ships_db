@@ -10,25 +10,26 @@ from psycopg2.extensions import connection
 # Table creation strings
 
 CREATE_SHIPS_TABLE = """
-CREATE TABLE IF NOT EXISTS  (
+CREATE TABLE IF NOT EXISTS ships (
     id SERIAL PRIMARY KEY,
+    imo INTEGER,
     name TEXT UNIQUE NOT NULL,
-    builder_id INTEGER NOT NULL REFERENCES builders(id),
-    owner_id INTEGER NOT NULL REFERENCES owners(id),
+    builder_id INTEGER REFERENCES builders(id),
+    last_owner_id INTEGER REFERENCES owners(id),
     ship_type_id INTEGER NOT NULL REFERENCES ship_types(id),
-    ship_class_id INTEGER NOT NULL REFERENCES ship_classes(id),
+    ship_class_id INTEGER REFERENCES ship_classes(id),
     date_built DATE,
     date_comissioned DATE,
     date_decomissioned DATE,
     date_scrapped_or_sunk DATE,
-    ship_status_id INTEGER NOT NULL REFERENCES ship_statuses(id)
+    ship_status_id INTEGER NOT NULL REFERENCES ship_statuses(id),
     length_m DOUBLE PRECISION,
     beam_m DOUBLE PRECISION,
     draft_m DOUBLE PRECISION,
     gross_tonnage DOUBLE PRECISION,
     displacement_std_t DOUBLE PRECISION,
     displacement_full_t DOUBLE PRECISION,
-    engine_type_id INTEGER NOT NULL REFERENCES engine_types(id),
+    engine_type_id INTEGER REFERENCES engine_types(id),
     engine_count INTEGER,
     screws_count INTEGER,
     engine_shp DOUBLE PRECISION,
@@ -79,14 +80,14 @@ CREATE TABLE IF NOT EXISTS owners (
 CREATE_STATUSES_TABLE = """
 CREATE TABLE IF NOT EXISTS ship_statuses (
     id SERIAL PRIMARY KEY,
-    name TEXT UNIQUE NOT NULL,
+    name TEXT UNIQUE NOT NULL
 );
 """
 
 CREATE_COUNTRIES_TABLE = """
 CREATE TABLE IF NOT EXISTS countries (
     id SERIAL PRIMARY KEY,
-    name TEXT UNIQUE NOT NULL,
+    name TEXT UNIQUE NOT NULL
 );
 """
 
@@ -176,13 +177,13 @@ def initialize_schema(conn) -> None:
         conn (connection): psql connection handle.
     """
 
-    create_table(conn, "ships", CREATE_SHIPS_TABLE)
+    create_table(conn, "countries", CREATE_COUNTRIES_TABLE)
     create_table(conn, "ship_types", CREATE_SHIP_TYPES_TABLE)
     create_table(conn, "ship_classes", CREATE_SHIP_CLASSES_TABLE)
     create_table(conn, "engine_types", CREATE_ENGINE_TYPES_TABLE)
     create_table(conn, "builders", CREATE_BUILDERS_TABLE)
     create_table(conn, "owners", CREATE_OWNERS_TABLE)
     create_table(conn, "ship_statuses", CREATE_STATUSES_TABLE)
-    create_table(conn, "countries", CREATE_COUNTRIES_TABLE)
+    create_table(conn, "ships", CREATE_SHIPS_TABLE)
 
 # EOF
